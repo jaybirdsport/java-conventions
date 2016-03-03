@@ -116,7 +116,23 @@ public class MyClass {
 | `String url`     | `String URL`     |
 | `long id`        | `long ID`        |
 
-### 2.2.4 Brace style
+### 2.2.4 Use TODO Comments
+
+Use TODO comments for code that is temporary, a short-term solution, or good-enough but not perfect. TODOs should include the string TODO in all caps, followed by a colon:
+
+```java
+// TODO: Remove this code after the UrlTable2 has been checked in.
+```
+
+and
+
+```java
+// TODO: Change this to use a flag instead of a constant.
+```
+
+If your TODO is of the form "At a future date do something" make sure that you either include a very specific date ("Fix by November 2016") or a very specific event ("Remove this code after all production mixers understand protocol V7.").
+
+### 2.2.5 Brace style
 
 Braces around the statements are required unless the condition and the body fit on one line.
 
@@ -133,9 +149,9 @@ if (condition)
     body();  // bad!
 ```
 
-### 2.2.5 Annotations
+### 2.2.6 Annotations
 
-#### 2.2.5.1 Annotations practices
+#### 2.2.6.1 Annotations practices
 
 According to the Android code style guide, the standard practices for some of the predefined annotations in Java are:
 
@@ -145,7 +161,7 @@ According to the Android code style guide, the standard practices for some of th
 
 More information about annotation guidelines can be found [here](http://source.android.com/source/code-style.html#use-standard-java-annotations).
 
-#### 2.2.5.2 Annotations style
+#### 2.2.6.2 Annotations style
 
 __Classes, Methods and Constructors__
 
@@ -166,13 +182,95 @@ Annotations applying to fields should be listed __on the same line__, unless the
 @Nullable @Mock DataManager mDataManager;
 ```
 
-### 2.2.6 Limit variable scope
+### 2.2.7 Limit variable scope
 
 _The scope of local variables should be kept to a minimum (Effective Java Item 29). By doing so, you increase the readability and maintainability of your code and reduce the likelihood of error. Each variable should be declared in the innermost block that encloses all uses of the variable._
 
 _Local variables should be declared at the point they are first used. Nearly every local variable declaration should contain an initializer. If you don't yet have enough information to initialize a variable sensibly, you should postpone the declaration until you do._ - ([Android code style guidelines](https://source.android.com/source/code-style.html#limit-variable-scope))
 
-### 2.2.7 Logging guidelines
+Loop variables should be declared in the for statement itself unless there is a compelling reason to do otherwise:
+
+```java
+for (int i = 0; i < n; i++) {
+    doSomething(i);
+}
+```
+
+and
+
+```java
+for (Iterator i = c.iterator(); i.hasNext(); ) {
+    doSomethingElse(i.next());
+}
+```
+
+### 2.2.8 Write Short Methods
+
+When feasible, keep methods small and focused. We recognize that long methods are sometimes appropriate, so no hard limit is placed on method length. Think about whether it can be broken up without harming the structure of the program.
+
+A good rule to go by is that if there are more than 2 indented sections inside each other ie. if clause, for loop, etch, then you need to extract out the most indented part into its own method.
+
+Example:
+
+```java
+public int calcSize(int x, int y, boolean isSuccessful)
+{
+    int calculatedSize = 0;
+    if(x == 123)
+    {
+        if(isSuccessful)
+        {
+            __for (int i = 0; i < y; i++) {
+                calculatedSize = calculatedValue + doSomething(x, i);
+            }__
+        } else
+        {
+        	calculatedSize = 5;
+        }
+    } else
+    {
+	    calculatedSize = 10;
+    }
+    
+    return calculatedSize;
+}
+```
+
+update to
+
+```java
+public int calcSize(int x, int y, boolean isSuccessful)
+{
+    int calculatedSize = 0;
+    if(x == 123)
+    {
+        if(isSuccessful)
+        {
+            __calculatedSize = calcSuccessfulSize(x, y);__
+        }  else
+        {
+        	calculatedSize = 5;
+        }
+    } else
+    {
+	    calculatedSize = 10;
+    }
+    
+    return calculatedSize;
+}
+
+private int calcSuccessfulSize(int x, int y)
+{
+    int calculatedSize = 0;
+    for (int i = 0; i < y; i++) {
+        calculatedSize = calculatedValue + doSomething(x, i);
+    }
+    
+    return calculatedSize;
+}
+```
+
+### 2.2.9 Logging guidelines
 
 Use the logging methods provided by the `Log` class to print out error messages or other information that may be useful for developers to identify issues:
 
@@ -202,7 +300,7 @@ To only show logs on debug builds:
 if (BuildConfig.DEBUG) Log.d(TAG, "The value of x is " + x);
 ```
 
-### 2.2.8 Parameter ordering in methods
+### 2.2.10 Parameter ordering in methods
 
 When programming for Android, it is quite common to define methods that take a `Context`. If you are writing a method like this, then the __Context__ must be the __first__ parameter.
 
@@ -218,7 +316,7 @@ public User loadUser(Context context, int userId);
 public void loadUserAsync(Context context, int userId, UserCallback callback);
 ```
 
-### 2.2.9 Arguments in Fragments and Activities
+### 2.2.11 Arguments in Fragments and Activities
 
 When data is passed into an `Activity `or `Fragment` via an `Intent` or a `Bundle`, the keys for the different values __must__ follow the rules described in the section above.
 
@@ -250,7 +348,7 @@ __Note 1__: These methods should go at the top of the class before `onCreate()`.
 
 __Note 2__: If we provide the methods described above, the keys for extras and arguments should be `private` because there is not need for them to be exposed outside the class.
 
-### 2.2.10 Line-wrapping strategies
+### 2.2.12 Line-wrapping strategies
 
 There isn't an exact formula that explains how to line-wrap and quite often different solutions are valid. However there are a few rules that can be applied to common cases.
 
@@ -385,11 +483,15 @@ Unless the rest of resources, style names are written in __UpperCamelCase__.
 
 ### 2.4.1 Unit tests
 
-Test classes should match the name of the class the tests are targeting, followed by `Test`. For example, if we create a test class that contains tests for the `DatabaseHelper`, we should name it `DatabaseHelperTest`.
+Test classes should match the name of the class the tests are targeting, followed by `Test`. For example, if we create a test class that contains tests for the `DatabaseHelper`, we should name it `DatabaseHelperTest`. Sometimes a class may contain a large amount of methods, that at the same time require several tests for each method. In this case, it's recommendable to split up the test class into multiple ones. For example, if the `DataManager` contains a lot of methods we may want to divide it into `DataManagerSignInTest`, `DataManagerLoadUsersTest`, etc. 
 
-Test methods are annotated with `@Test` and should generally start with the name of the method that is being tested, followed by a precondition and/or expected behaviour.
+Follow test method naming conventions and use an underscore to separate what is being tested from the specific case being tested. This style makes it easier to see exactly what cases are being tested. For example:
 
-* Template: `@Test void methodNamePreconditionExpectedBehaviour()`
-* Example: `@Test void signInWithEmptyEmailFails()`
+testMethod_specificCase1 testMethod_specificCase2
 
-Sometimes a class may contain a large amount of methods, that at the same time require several tests for each method. In this case, it's recommendable to split up the test class into multiple ones. For example, if the `DataManager` contains a lot of methods we may want to divide it into `DataManagerSignInTest`, `DataManagerLoadUsersTest`, etc. 
+void testIsDistinguishable_protanopia() {
+    ColorMatcher colorMatcher = new ColorMatcher(PROTANOPIA)
+    assertFalse(colorMatcher.isDistinguishable(Color.RED, Color.BLACK))
+    assertTrue(colorMatcher.isDistinguishable(Color.X, Color.Y))
+}
+
