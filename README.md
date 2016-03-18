@@ -30,7 +30,7 @@ Naming conventions for icons (taken from [Android iconography guidelines](http:/
 
 Naming conventions for selector states:
 
-| State	       | Suffix          | Example                     |
+| State        | Suffix          | Example                     |
 |--------------|-----------------|-----------------------------|
 | Normal       | `_normal`       | `btn_order_normal.9.png`    |
 | Pressed      | `_pressed`      | `btn_order_pressed.9.png`   |
@@ -225,11 +225,11 @@ public int calcSize(int x, int y, boolean isSuccessful)
             }__
         } else
         {
-        	calculatedSize = 5;
+            calculatedSize = 5;
         }
     } else
     {
-	    calculatedSize = 10;
+        calculatedSize = 10;
     }
     
     return calculatedSize;
@@ -249,11 +249,11 @@ public int calcSize(int x, int y, boolean isSuccessful)
             __calculatedSize = calcSuccessfulSize(x, y);__
         }  else
         {
-        	calculatedSize = 5;
+            calculatedSize = 5;
         }
     } else
     {
-	    calculatedSize = 10;
+        calculatedSize = 10;
     }
     
     return calculatedSize;
@@ -326,9 +326,9 @@ In the case of Activities the method is usually called `getStartIntent()`:
 
 ```java
 public static Intent getStartIntent(Context context, User user) {
-	Intent intent = new Intent(context, ThisActivity.class);
-	intent.putParcelableExtra(EXTRA_USER, user);
-	return intent;
+    Intent intent = new Intent(context, ThisActivity.class);
+    intent.putParcelableExtra(EXTRA_USER, user);
+    return intent;
 }
 ```
 
@@ -336,11 +336,11 @@ For Fragments it is named `newInstance()` and handles the creation of the Fragme
 
 ```java
 public static UserFragment newInstance(User user) {
-	UserFragment fragment = new UserFragment;
-	Bundle args = new Bundle();
-	args.putParcelable(ARGUMENT_USER, user);
-	fragment.setArguments(args)
-	return fragment;
+    UserFragment fragment = new UserFragment;
+    Bundle args = new Bundle();
+    args.putParcelable(ARGUMENT_USER, user);
+    fragment.setArguments(args)
+    return fragment;
 }
 ```
 
@@ -399,6 +399,13 @@ loadPicture(context,
         clickListener,
         "Title of the picture");
 ```
+### 2.2.13 Enumeration Names
+
+Enumeration names should follow the conventions of class names. The enumeration set of objects (choices) should be all uppercase letters:
+```java
+enum Battery {CRITICAL, LOW, CHARGED, FULL}
+```
+
 ## 2.3 XML style rules
 
 ### 2.3.1 Use self closing tags
@@ -409,9 +416,9 @@ This is good:
 
 ```xml
 <TextView
-	android:id="@+id/text_view_profile"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content" />
+    android:id="@+id/text_view_profile"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />
 ```
 
 This is __bad__ :
@@ -455,7 +462,7 @@ Menu example:
 
 ```xml
 <menu>
-	<item
+    <item
         android:id="@+id/menu_done"
         android:title="Done" />
 </menu>
